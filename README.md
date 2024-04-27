@@ -1,5 +1,7 @@
 # Dupes2Trash
 
+[![CodeQL](https://github.com/seerainer/Dupes2Trash/workflows/CodeQL/badge.svg)](https://github.com/seerainer/Dupes2Trash/security/code-scanning)
+
 ~~~ sh
 git clone https://github.com/seerainer/Dupes2Trash.git
 ~~~
