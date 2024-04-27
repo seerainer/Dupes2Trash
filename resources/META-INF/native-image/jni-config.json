@@ -1,0 +1,207 @@
+[
+{
+  "name":"java.awt.AWTEvent",
+  "fields":[{"name":"bdata"}, {"name":"consumed"}, {"name":"id"}]
+},
+{
+  "name":"java.awt.Component",
+  "fields":[{"name":"appContext"}, {"name":"background"}, {"name":"cursor"}, {"name":"enabled"}, {"name":"focusable"}, {"name":"foreground"}, {"name":"graphicsConfig"}, {"name":"height"}, {"name":"parent"}, {"name":"peer"}, {"name":"visible"}, {"name":"width"}, {"name":"x"}, {"name":"y"}],
+  "methods":[{"name":"getFont_NoClientCode","parameterTypes":[] }, {"name":"getLocationOnScreen_NoTreeLock","parameterTypes":[] }, {"name":"getToolkitImpl","parameterTypes":[] }, {"name":"isEnabledImpl","parameterTypes":[] }]
+},
+{
+  "name":"java.awt.Font",
+  "fields":[{"name":"name"}, {"name":"pData"}, {"name":"size"}, {"name":"style"}],
+  "methods":[{"name":"getFont","parameterTypes":["java.lang.String"] }, {"name":"getFontPeer","parameterTypes":[] }]
+},
+{
+  "name":"java.awt.Insets",
+  "fields":[{"name":"bottom"}, {"name":"left"}, {"name":"right"}, {"name":"top"}],
+  "methods":[{"name":"<init>","parameterTypes":["int","int","int","int"] }]
+},
+{
+  "name":"java.awt.Toolkit",
+  "methods":[{"name":"getDefaultToolkit","parameterTypes":[] }, {"name":"getFontMetrics","parameterTypes":["java.awt.Font"] }]
+},
+{
+  "name":"java.awt.desktop.UserSessionEvent$Reason",
+  "fields":[{"name":"CONSOLE"}, {"name":"LOCK"}, {"name":"REMOTE"}, {"name":"UNSPECIFIED"}]
+},
+{
+  "name":"java.awt.event.InputEvent",
+  "fields":[{"name":"modifiers"}],
+  "methods":[{"name":"getButtonDownMasks","parameterTypes":[] }]
+},
+{
+  "name":"java.awt.image.ColorModel",
+  "fields":[{"name":"colorSpace"}, {"name":"colorSpaceType"}, {"name":"isAlphaPremultiplied"}, {"name":"is_sRGB"}, {"name":"nBits"}, {"name":"numComponents"}, {"name":"pData"}, {"name":"supportsAlpha"}, {"name":"transparency"}],
+  "methods":[{"name":"getRGBdefault","parameterTypes":[] }]
+},
+{
+  "name":"java.awt.image.IndexColorModel",
+  "fields":[{"name":"allgrayopaque"}, {"name":"map_size"}, {"name":"rgb"}, {"name":"transparent_index"}]
+},
+{
+  "name":"java.lang.Boolean",
+  "methods":[{"name":"getBoolean","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Throwable",
+  "methods":[{"name":"addSuppressed","parameterTypes":["java.lang.Throwable"] }]
+},
+{
+  "name":"org.eclipse.swt.internal.ole.win32.GUID",
+  "fields":[{"name":"Data1"}, {"name":"Data2"}, {"name":"Data3"}, {"name":"Data4"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.ACCEL",
+  "fields":[{"name":"cmd"}, {"name":"fVirt"}, {"name":"key"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.ACTCTX",
+  "fields":[{"name":"cbSize"}, {"name":"dwFlags"}, {"name":"hModule"}, {"name":"lpApplicationName"}, {"name":"lpAssemblyDirectory"}, {"name":"lpResourceName"}, {"name":"lpSource"}, {"name":"wLangId"}, {"name":"wProcessorArchitecture"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.DRAWITEMSTRUCT",
+  "fields":[{"name":"CtlID"}, {"name":"CtlType"}, {"name":"bottom"}, {"name":"hDC"}, {"name":"hwndItem"}, {"name":"itemAction"}, {"name":"itemData"}, {"name":"itemID"}, {"name":"itemState"}, {"name":"left"}, {"name":"right"}, {"name":"top"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.INITCOMMONCONTROLSEX",
+  "fields":[{"name":"dwICC"}, {"name":"dwSize"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.LOGBRUSH",
+  "fields":[{"name":"lbColor"}, {"name":"lbHatch"}, {"name":"lbStyle"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.LOGFONT",
+  "fields":[{"name":"lfCharSet"}, {"name":"lfClipPrecision"}, {"name":"lfEscapement"}, {"name":"lfFaceName"}, {"name":"lfHeight"}, {"name":"lfItalic"}, {"name":"lfOrientation"}, {"name":"lfOutPrecision"}, {"name":"lfPitchAndFamily"}, {"name":"lfQuality"}, {"name":"lfStrikeOut"}, {"name":"lfUnderline"}, {"name":"lfWeight"}, {"name":"lfWidth"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.MEASUREITEMSTRUCT",
+  "fields":[{"name":"CtlID"}, {"name":"CtlType"}, {"name":"itemData"}, {"name":"itemHeight"}, {"name":"itemID"}, {"name":"itemWidth"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.MENUINFO",
+  "fields":[{"name":"cbSize"}, {"name":"cyMax"}, {"name":"dwContextHelpID"}, {"name":"dwMenuData"}, {"name":"dwStyle"}, {"name":"fMask"}, {"name":"hbrBack"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.MENUITEMINFO",
+  "fields":[{"name":"cbSize"}, {"name":"cch"}, {"name":"dwItemData"}, {"name":"dwTypeData"}, {"name":"fMask"}, {"name":"fState"}, {"name":"fType"}, {"name":"hSubMenu"}, {"name":"hbmpChecked"}, {"name":"hbmpItem"}, {"name":"hbmpUnchecked"}, {"name":"wID"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.MONITORINFO",
+  "fields":[{"name":"cbSize"}, {"name":"dwFlags"}, {"name":"rcMonitor_bottom"}, {"name":"rcMonitor_left"}, {"name":"rcMonitor_right"}, {"name":"rcMonitor_top"}, {"name":"rcWork_bottom"}, {"name":"rcWork_left"}, {"name":"rcWork_right"}, {"name":"rcWork_top"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.MSG",
+  "fields":[{"name":"hwnd"}, {"name":"lParam"}, {"name":"message"}, {"name":"time"}, {"name":"wParam"}, {"name":"x"}, {"name":"y"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.NMHDR",
+  "fields":[{"name":"code"}, {"name":"hwndFrom"}, {"name":"idFrom"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.NONCLIENTMETRICS",
+  "fields":[{"name":"cbSize"}, {"name":"iBorderWidth"}, {"name":"iCaptionHeight"}, {"name":"iCaptionWidth"}, {"name":"iMenuHeight"}, {"name":"iMenuWidth"}, {"name":"iScrollHeight"}, {"name":"iScrollWidth"}, {"name":"iSmCaptionHeight"}, {"name":"iSmCaptionWidth"}, {"name":"lfCaptionFont"}, {"name":"lfMenuFont"}, {"name":"lfMessageFont"}, {"name":"lfSmCaptionFont"}, {"name":"lfStatusFont"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.OSVERSIONINFOEX",
+  "fields":[{"name":"dwBuildNumber"}, {"name":"dwMajorVersion"}, {"name":"dwMinorVersion"}, {"name":"dwOSVersionInfoSize"}, {"name":"dwPlatformId"}, {"name":"szCSDVersion"}, {"name":"wProductType"}, {"name":"wReserved"}, {"name":"wServicePackMajor"}, {"name":"wServicePackMinor"}, {"name":"wSuiteMask"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.PAINTSTRUCT",
+  "fields":[{"name":"bottom"}, {"name":"fErase"}, {"name":"fIncUpdate"}, {"name":"fRestore"}, {"name":"hdc"}, {"name":"left"}, {"name":"rgbReserved"}, {"name":"right"}, {"name":"top"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.POINT",
+  "fields":[{"name":"x"}, {"name":"y"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.RECT",
+  "fields":[{"name":"bottom"}, {"name":"left"}, {"name":"right"}, {"name":"top"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.SCROLLINFO",
+  "fields":[{"name":"cbSize"}, {"name":"fMask"}, {"name":"nMax"}, {"name":"nMin"}, {"name":"nPage"}, {"name":"nPos"}, {"name":"nTrackPos"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.SHELLEXECUTEINFO",
+  "fields":[{"name":"cbSize"}, {"name":"dwHotKey"}, {"name":"fMask"}, {"name":"hIcon"}, {"name":"hInstApp"}, {"name":"hProcess"}, {"name":"hkeyClass"}, {"name":"hwnd"}, {"name":"lpClass"}, {"name":"lpDirectory"}, {"name":"lpFile"}, {"name":"lpIDList"}, {"name":"lpParameters"}, {"name":"lpVerb"}, {"name":"nShow"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.STARTUPINFO",
+  "fields":[{"name":"cb"}, {"name":"cbReserved2"}, {"name":"dwFillAttribute"}, {"name":"dwFlags"}, {"name":"dwX"}, {"name":"dwXCountChars"}, {"name":"dwXSize"}, {"name":"dwY"}, {"name":"dwYCountChars"}, {"name":"dwYSize"}, {"name":"hStdError"}, {"name":"hStdInput"}, {"name":"hStdOutput"}, {"name":"lpDesktop"}, {"name":"lpReserved"}, {"name":"lpReserved2"}, {"name":"lpTitle"}, {"name":"wShowWindow"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.WINDOWPLACEMENT",
+  "fields":[{"name":"bottom"}, {"name":"flags"}, {"name":"left"}, {"name":"length"}, {"name":"ptMaxPosition_x"}, {"name":"ptMaxPosition_y"}, {"name":"ptMinPosition_x"}, {"name":"ptMinPosition_y"}, {"name":"right"}, {"name":"showCmd"}, {"name":"top"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.WINDOWPOS",
+  "fields":[{"name":"cx"}, {"name":"cy"}, {"name":"flags"}, {"name":"hwnd"}, {"name":"hwndInsertAfter"}, {"name":"x"}, {"name":"y"}]
+},
+{
+  "name":"org.eclipse.swt.internal.win32.WNDCLASS",
+  "fields":[{"name":"cbClsExtra"}, {"name":"cbWndExtra"}, {"name":"hCursor"}, {"name":"hIcon"}, {"name":"hInstance"}, {"name":"hbrBackground"}, {"name":"lpfnWndProc"}, {"name":"lpszClassName"}, {"name":"lpszMenuName"}, {"name":"style"}]
+},
+{
+  "name":"org.eclipse.swt.widgets.Display",
+  "methods":[{"name":"foregroundIdleProc","parameterTypes":["long","long","long"] }, {"name":"messageProc","parameterTypes":["long","long","long","long"] }, {"name":"msgFilterProc","parameterTypes":["long","long","long"] }, {"name":"windowProc","parameterTypes":["long","long","long","long"] }]
+},
+{
+  "name":"sun.awt.AWTAutoShutdown",
+  "methods":[{"name":"notifyToolkitThreadBusy","parameterTypes":[] }, {"name":"notifyToolkitThreadFree","parameterTypes":[] }]
+},
+{
+  "name":"sun.awt.SunToolkit",
+  "methods":[{"name":"isTouchKeyboardAutoShowEnabled","parameterTypes":[] }]
+},
+{
+  "name":"sun.awt.image.SunVolatileImage",
+  "fields":[{"name":"volSurfaceManager"}]
+},
+{
+  "name":"sun.awt.image.VolatileSurfaceManager",
+  "fields":[{"name":"sdCurrent"}]
+},
+{
+  "name":"sun.awt.windows.WComponentPeer",
+  "fields":[{"name":"hwnd"}, {"name":"winGraphicsConfig"}],
+  "methods":[{"name":"disposeLater","parameterTypes":[] }, {"name":"replaceSurfaceData","parameterTypes":[] }, {"name":"replaceSurfaceDataLater","parameterTypes":[] }]
+},
+{
+  "name":"sun.awt.windows.WDesktopPeer",
+  "methods":[{"name":"systemSleepCallback","parameterTypes":["boolean"] }, {"name":"userSessionCallback","parameterTypes":["boolean","java.awt.desktop.UserSessionEvent$Reason"] }]
+},
+{
+  "name":"sun.awt.windows.WObjectPeer",
+  "fields":[{"name":"createError"}, {"name":"destroyed"}, {"name":"pData"}, {"name":"target"}],
+  "methods":[{"name":"getPeerForTarget","parameterTypes":["java.lang.Object"] }]
+},
+{
+  "name":"sun.awt.windows.WToolkit",
+  "methods":[{"name":"displayChanged","parameterTypes":[] }, {"name":"windowsSettingChange","parameterTypes":[] }]
+},
+{
+  "name":"sun.java2d.Disposer",
+  "methods":[{"name":"addRecord","parameterTypes":["java.lang.Object","long","long"] }]
+},
+{
+  "name":"sun.java2d.InvalidPipeException"
+},
+{
+  "name":"sun.java2d.NullSurfaceData"
+},
+{
+  "name":"sun.java2d.SurfaceData",
+  "fields":[{"name":"pData"}, {"name":"valid"}]
+},
+{
+  "name":"sun.java2d.pipe.Region",
+  "fields":[{"name":"bands"}, {"name":"endIndex"}, {"name":"hix"}, {"name":"hiy"}, {"name":"lox"}, {"name":"loy"}]
+},
+{
+  "name":"sun.java2d.pipe.RegionIterator",
+  "fields":[{"name":"curIndex"}, {"name":"numXbands"}, {"name":"region"}]
+}
+]
