@@ -2,11 +2,11 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'application'
-    id 'org.graalvm.buildtools.native' version '0.10.1'
+    id 'org.graalvm.buildtools.native' version '0.10.2'
 }
 
 group = 'io.github.seerainer.dupes2trash'
-version = '0.1.0'
+version = '0.1.1'
 
 repositories {
     mavenCentral()
@@ -60,7 +60,7 @@ graalvmNative {
             buildArgs.add('--gc=epsilon')
             buildArgs.add('--no-fallback')
             buildArgs.add('-R:MinHeapSize=32m')
-            buildArgs.add('-R:MaxHeapSize=4g')
+            buildArgs.add('-R:MaxHeapSize=2g')
             buildArgs.add('-R:MaxNewSize=32m')
             useFatJar = true
         }

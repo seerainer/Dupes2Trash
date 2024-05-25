@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package io.github.seerainer.dupes2trash;
 
@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Stack;
 
 import org.apache.commons.io.IOUtils;
@@ -87,7 +87,7 @@ public class Dupes2Trash {
 
 	private void compare() {
 		final var files = search();
-		final var ht = new Hashtable<Long, String>(files.size());
+		final var ht = new HashMap<Long, String>(files.size());
 		listA.setRedraw(false);
 		listB.setRedraw(false);
 		listA.removeAll();
@@ -143,6 +143,8 @@ public class Dupes2Trash {
 		}
 
 		message(SWT.OK | SWT.ICON_INFORMATION, i + " file(s) moved to trash!", "Info"); //$NON-NLS-1$ //$NON-NLS-2$
+		listA.setEnabled(false);
+		listB.setEnabled(false);
 	}
 
 	private Shell open(final Display display) {
@@ -236,13 +238,13 @@ public class Dupes2Trash {
 					message(SWT.OK | SWT.ICON_INFORMATION, "0 duplicate files found!", "Info"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
-		}
 
-		dir = null;
+			dir = null;
+		}
 	}
 
 	private java.util.List<File> search() {
-		final java.util.List<File> files = new ArrayList<>(0x100000);
+		final java.util.List<File> files = new ArrayList<>();
 		final var dirs = new Stack<File>();
 		final var startdir = new File(dir);
 
