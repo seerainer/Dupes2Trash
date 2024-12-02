@@ -76,7 +76,8 @@ public class Dupes2Trash {
 		return item;
 	}
 
-	private List listA, listB;
+	private List listA;
+	private List listB;
 	private Shell shell;
 	private String dir;
 
@@ -93,7 +94,7 @@ public class Dupes2Trash {
 		listA.removeAll();
 		listB.removeAll();
 
-		for (final File f : files) {
+		files.forEach((final File f) -> {
 			final var length = Long.valueOf(f.length());
 
 			if (ht.containsKey(length)) {
@@ -105,9 +106,6 @@ public class Dupes2Trash {
 						listA.add(s1);
 						listB.add(s2);
 					}
-
-					is1.close();
-					is2.close();
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
@@ -115,7 +113,7 @@ public class Dupes2Trash {
 
 			if (f.isFile())
 				ht.put(length, f.getAbsolutePath());
-		}
+		});
 
 		listA.setRedraw(true);
 		listB.setRedraw(true);
@@ -202,45 +200,45 @@ public class Dupes2Trash {
 	private void openDir() {
 		if (dir == null)
 			dir = new DirectoryDialog(shell).open();
-		if (dir != null) {
-			final var f = new File(dir);
+		if (dir == null)
+			return;
 
-			if (f.exists() && f.isDirectory()) {
-				final var wait = new Shell(shell, SWT.SYSTEM_MODAL | SWT.ON_TOP);
-				wait.setSize(270, 80);
+		final var f = new File(dir);
 
-				final var r = shell.getDisplay().getBounds();
-				final var s = wait.getBounds();
-				final var x = (r.width - s.width) / 2;
-				final var y = (r.height - s.height) / 2;
-				wait.setLocation(x, y);
+		if (f.exists() && f.isDirectory()) {
+			final var wait = new Shell(shell, SWT.SYSTEM_MODAL | SWT.ON_TOP);
+			wait.setSize(270, 80);
 
-				final var label = new Label(wait, SWT.HORIZONTAL);
-				label.setBounds(94, 36, 200, 50);
-				label.setText("Please wait..."); //$NON-NLS-1$
+			final var r = shell.getDisplay().getBounds();
+			final var s = wait.getBounds();
+			final var x = (r.width - s.width) / 2;
+			final var y = (r.height - s.height) / 2;
+			wait.setLocation(x, y);
 
-				wait.open();
-				compare();
-				wait.close();
+			final var label = new Label(wait, SWT.HORIZONTAL);
+			label.setBounds(94, 36, 200, 50);
+			label.setText("Please wait..."); //$NON-NLS-1$
 
-				if (listA.getItemCount() > 0) {
-					listA.setEnabled(true);
-					listB.setEnabled(true);
+			wait.open();
+			compare();
+			wait.close();
 
-					final var mb = message(SWT.OK | SWT.CANCEL | SWT.ICON_WARNING,
-							listA.getItemCount() + " duplicate file(s) found!\n\nMove to trash?", "Warning"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (listA.getItemCount() > 0) {
+				listA.setEnabled(true);
+				listB.setEnabled(true);
 
-					if (mb == SWT.OK)
-						moveToTrash();
-				} else {
-					listA.setEnabled(false);
-					listB.setEnabled(false);
-					message(SWT.OK | SWT.ICON_INFORMATION, "0 duplicate files found!", "Info"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
+				final var mb = message(SWT.OK | SWT.CANCEL | SWT.ICON_WARNING,
+						listA.getItemCount() + " duplicate file(s) found!\n\nMove to trash?", "Warning"); //$NON-NLS-1$ //$NON-NLS-2$
+
+				if (mb == SWT.OK)
+					moveToTrash();
+			} else {
+				listA.setEnabled(false);
+				listB.setEnabled(false);
+				message(SWT.OK | SWT.ICON_INFORMATION, "0 duplicate files found!", "Info"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-
-			dir = null;
 		}
+		dir = null;
 	}
 
 	private java.util.List<File> search() {
