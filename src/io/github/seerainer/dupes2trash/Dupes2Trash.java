@@ -126,11 +126,11 @@ public class Dupes2Trash {
 		listA.removeAll();
 		listB.removeAll();
 
-		for (int i = 0; i < files.size(); i++) {
+		for (var i = 0; i < files.size(); i++) {
 			final var f1 = files.get(i);
 
 			if (f1.isFile()) {
-				for (int j = i + 1; j < files.size(); j++) {
+				for (var j = i + 1; j < files.size(); j++) {
 					final var f2 = files.get(j);
 
 					if (f2.isFile() && f1.length() == f2.length()) {
