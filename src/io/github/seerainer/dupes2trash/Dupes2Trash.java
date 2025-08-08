@@ -21,8 +21,8 @@ import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -33,6 +33,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -40,6 +41,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -49,42 +51,63 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class Dupes2Trash {
 
-	private static boolean contentEquals(final RandomAccessFile raf1, final RandomAccessFile raf2) throws IOException {
-		if (raf1 == raf2) {
-			return true;
+	private static final int BUFFER_SIZE = 8192;
+	private static final boolean DARK_MODE = Display.isSystemDarkTheme();
+	private static final Color DARK_BACK = new Color(50, 50, 50);
+	private static final Color DARK_FORE = new Color(220, 220, 220);
+	private static final Display DISPLAY = Display.getDefault();
+	private List listA;
+	private List listB;
+	private Shell shell;
+	private String dir;
+
+	private Dupes2Trash(final String[] args) {
+		if (args.length > 0) {
+			this.dir = args[0];
 		}
-		if (raf1 == null || raf2 == null || (raf1.length() != raf2.length())) {
+	}
+
+	private static boolean contentEquals(final String path1, final String path2) {
+		try (var fis1 = new FileInputStream(path1); var fis2 = new FileInputStream(path2)) {
+			final var buffer1 = new byte[BUFFER_SIZE];
+			final var buffer2 = new byte[BUFFER_SIZE];
+
+			while (true) {
+				final var bytesRead1 = fis1.read(buffer1);
+				final var bytesRead2 = fis2.read(buffer2);
+
+				if (bytesRead1 != bytesRead2) {
+					return false;
+				}
+				if (bytesRead1 == -1) {
+					break;
+				}
+				if (!Arrays.equals(Arrays.copyOf(buffer1, bytesRead1), Arrays.copyOf(buffer2, bytesRead2))) {
+					return false;
+				}
+			}
+			return true;
+		} catch (final IOException e) {
+			e.printStackTrace();
 			return false;
 		}
-
-		final var buffer1 = new byte[8192];
-		final var buffer2 = new byte[8192];
-
-		int bytesRead1;
-		int bytesRead2;
-
-		while ((bytesRead1 = raf1.read(buffer1)) != -1) {
-			bytesRead2 = raf2.read(buffer2);
-			if (bytesRead1 != bytesRead2 || !Arrays.equals(buffer1, buffer2)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public static void main(final String[] args) {
 		System.setProperty("org.eclipse.swt.display.useSystemTheme", "true");
+		try {
+			final var shell = new Dupes2Trash(args).open(DISPLAY);
 
-		final var display = new Display();
-		final var shell = new Dupes2Trash(args).open(display);
-
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
+			while (!shell.isDisposed()) {
+				if (!DISPLAY.readAndDispatch()) {
+					DISPLAY.sleep();
+				}
 			}
+		} finally {
+			DARK_BACK.dispose();
+			DARK_FORE.dispose();
+			DISPLAY.dispose();
 		}
-		display.dispose();
 	}
 
 	private static MenuItem menuItem(final Menu parent, final int state, final Menu menu, final SelectionListener listener,
@@ -107,54 +130,83 @@ public class Dupes2Trash {
 		return item;
 	}
 
-	private List listA;
-	private List listB;
-	private Shell shell;
-	private String dir;
-
-	private Dupes2Trash(final String[] args) {
-		if (args.length > 0) {
-			this.dir = args[0];
+	private static void setColors(final Control control) {
+		if (!DARK_MODE) {
+			return;
 		}
+		control.setBackground(DARK_BACK);
+		control.setForeground(DARK_FORE);
 	}
 
 	private void compare() {
-		final var addedFiles = new HashSet<String>();
+		final var progressShell = new Shell(shell, SWT.APPLICATION_MODAL | SWT.ON_TOP);
+		progressShell.setText("Comparing Files...");
+		progressShell.setLayout(new FillLayout(SWT.VERTICAL));
+		final var label = new Label(progressShell, SWT.NONE);
+		label.setText("Comparing files, please wait...");
+		setColors(label);
+		final var progressBar = new ProgressBar(progressShell, SWT.HORIZONTAL);
+		progressBar.setMinimum(0);
+
 		final var files = search();
-		listA.setRedraw(false);
-		listB.setRedraw(false);
-		listA.removeAll();
-		listB.removeAll();
+		progressBar.setMaximum(files.size());
+		progressShell.setSize(300, 100);
 
-		for (var i = 0; i < files.size(); i++) {
-			final var f1 = files.get(i);
+		final var display = shell.getDisplay();
+		final var primary = display.getPrimaryMonitor();
+		final var bounds = primary.getBounds();
+		final var shellBounds = progressShell.getBounds();
+		final var x = bounds.x + (bounds.width - shellBounds.width) / 2;
+		final var y = bounds.y + (bounds.height - shellBounds.height) / 2;
+		progressShell.setLocation(x, y);
 
-			if (f1.isFile()) {
-				for (var j = i + 1; j < files.size(); j++) {
-					final var f2 = files.get(j);
+		progressShell.open();
 
-					if (f2.isFile() && f1.length() == f2.length()) {
-						final var s1 = f1.getAbsolutePath();
-						final var s2 = f2.getAbsolutePath();
-
-						if (!addedFiles.contains(s2)) {
-							try (final var raf1 = new RandomAccessFile(s1, "r"); final var raf2 = new RandomAccessFile(s2, "r")) {
-								if (contentEquals(raf1, raf2)) {
+		new Thread(() -> {
+			final var addedFiles = new HashSet<String>();
+			for (var i = 0; i < files.size(); i++) {
+				final var f1 = files.get(i);
+				if (f1.isFile()) {
+					for (var j = i + 1; j < files.size(); j++) {
+						final var f2 = files.get(j);
+						if (f2.isFile() && f1.length() == f2.length()) {
+							final var s1 = f1.getAbsolutePath();
+							final var s2 = f2.getAbsolutePath();
+							if (!addedFiles.contains(s2) && contentEquals(s1, s2)) {
+								shell.getDisplay().asyncExec(() -> {
 									listA.add(s1);
 									listB.add(s2);
-									addedFiles.add(s2);
-								}
-							} catch (final IOException e) {
-								e.printStackTrace();
+								});
+								addedFiles.add(s2);
 							}
 						}
 					}
 				}
+				final var progress = i + 1;
+				shell.getDisplay().asyncExec(() -> progressBar.setSelection(progress));
 			}
-		}
+			shell.getDisplay().asyncExec(() -> {
+				progressShell.close();
+				listA.setRedraw(true);
+				listB.setRedraw(true);
 
-		listA.setRedraw(true);
-		listB.setRedraw(true);
+				if (listA.getItemCount() > 0) {
+					listA.setEnabled(true);
+					listB.setEnabled(true);
+
+					final var mb = message(SWT.OK | SWT.CANCEL | SWT.ICON_WARNING,
+							listA.getItemCount() + " duplicate file(s) found!\n\nMove to trash?", "Warning");
+
+					if (mb == SWT.OK) {
+						moveToTrash();
+					}
+				} else {
+					listA.setEnabled(false);
+					listB.setEnabled(false);
+					message(SWT.OK | SWT.ICON_INFORMATION, "0 duplicate files found!", "Info");
+				}
+			});
+		}).start();
 	}
 
 	private int message(final int style, final String message, final String text) {
@@ -185,16 +237,12 @@ public class Dupes2Trash {
 	}
 
 	private Shell open(final Display display) {
-		final var darkMode = Display.isSystemDarkTheme();
-		final var darkBack = new Color(0x30, 0x30, 0x30);
-		final var darkFore = new Color(0xDD, 0xDD, 0xDD);
-
-		if ("win32".equals(SWT.getPlatform()) && darkMode) {
+		if ("win32".equals(SWT.getPlatform()) && DARK_MODE) {
 			display.setData("org.eclipse.swt.internal.win32.useDarkModeExplorerTheme", Boolean.TRUE);
 			display.setData("org.eclipse.swt.internal.win32.useShellTitleColoring", Boolean.TRUE);
 			display.setData("org.eclipse.swt.internal.win32.all.use_WS_BORDER", Boolean.TRUE);
-			display.setData("org.eclipse.swt.internal.win32.menuBarForegroundColor", darkFore);
-			display.setData("org.eclipse.swt.internal.win32.menuBarBackgroundColor", darkBack);
+			display.setData("org.eclipse.swt.internal.win32.menuBarForegroundColor", DARK_FORE);
+			display.setData("org.eclipse.swt.internal.win32.menuBarBackgroundColor", DARK_BACK);
 		}
 
 		shell = new Shell(display, SWT.SHELL_TRIM);
@@ -204,11 +252,11 @@ public class Dupes2Trash {
 
 		final var file = new Menu(shell, SWT.DROP_DOWN);
 		menuItem(shell.getMenuBar(), SWT.CASCADE, file, null, 0, "&File");
-		menuItem(file, SWT.PUSH, null, widgetSelectedAdapter(e -> openDir()), 0, "&Open Directory");
-		final var delete = menuItem(file, SWT.PUSH, null, widgetSelectedAdapter(e -> moveToTrash()), 0, "&Dupes to Trash");
+		menuItem(file, SWT.PUSH, null, widgetSelectedAdapter(_ -> openDir()), 0, "&Open Directory");
+		final var delete = menuItem(file, SWT.PUSH, null, widgetSelectedAdapter(_ -> moveToTrash()), 0, "&Dupes to Trash");
 		menuItem(file, SWT.SEPARATOR, null, null, 0, null);
-		menuItem(file, SWT.PUSH, null, widgetSelectedAdapter(e -> shell.close()), SWT.ESC, "E&xit\tEsc");
-		file.addMenuListener(menuShownAdapter(e -> delete.setEnabled(listA.getItemCount() > 0)));
+		menuItem(file, SWT.PUSH, null, widgetSelectedAdapter(_ -> shell.close()), SWT.ESC, "E&xit\tEsc");
+		file.addMenuListener(menuShownAdapter(_ -> delete.setEnabled(listA.getItemCount() > 0)));
 
 		final var form = new SashForm(shell, SWT.HORIZONTAL);
 		form.setLayout(new FillLayout());
@@ -218,15 +266,12 @@ public class Dupes2Trash {
 		listB = new List(form, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		listA.setEnabled(false);
 		listB.setEnabled(false);
+		setColors(listA);
+		setColors(listB);
+
+		syncListScrolling();
 
 		form.setWeights(50, 50);
-
-		if (darkMode) {
-			listA.setBackground(darkBack);
-			listA.setForeground(darkFore);
-			listB.setBackground(darkBack);
-			listB.setForeground(darkFore);
-		}
 
 		shell.open();
 
@@ -248,41 +293,9 @@ public class Dupes2Trash {
 		final var f = new File(dir);
 
 		if (f.exists() && f.isDirectory()) {
-			final var wait = new Shell(shell, SWT.SYSTEM_MODAL | SWT.ON_TOP);
-			wait.setSize(270, 80);
-
-			final var r = shell.getDisplay().getBounds();
-			final var s = wait.getBounds();
-			final var x = (r.width - s.width) / 2;
-			final var y = (r.height - s.height) / 2;
-			wait.setLocation(x, y);
-
-			final var label = new Label(wait, SWT.HORIZONTAL);
-			label.setBounds(94, 36, 200, 50);
-			label.setText("Please wait...");
-
-			wait.open();
-
 			compare();
-
-			wait.close();
-
-			if (listA.getItemCount() > 0) {
-				listA.setEnabled(true);
-				listB.setEnabled(true);
-
-				final var mb = message(SWT.OK | SWT.CANCEL | SWT.ICON_WARNING,
-						listA.getItemCount() + " duplicate file(s) found!\n\nMove to trash?", "Warning");
-
-				if (mb == SWT.OK) {
-					moveToTrash();
-				}
-			} else {
-				listA.setEnabled(false);
-				listB.setEnabled(false);
-				message(SWT.OK | SWT.ICON_INFORMATION, "0 duplicate files found!", "Info");
-			}
 		}
+
 		dir = null;
 	}
 
@@ -306,5 +319,12 @@ public class Dupes2Trash {
 		}
 
 		return files;
+	}
+
+	private void syncListScrolling() {
+		listA.addListener(SWT.MouseVerticalWheel, _ -> listB.setTopIndex(listA.getTopIndex()));
+		listB.addListener(SWT.MouseVerticalWheel, _ -> listA.setTopIndex(listB.getTopIndex()));
+		listA.addListener(SWT.Selection, _ -> listB.setTopIndex(listA.getTopIndex()));
+		listB.addListener(SWT.Selection, _ -> listA.setTopIndex(listB.getTopIndex()));
 	}
 }
