@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'application'
-    id 'org.graalvm.buildtools.native' version '0.11.0'
+    id 'org.graalvm.buildtools.native' version '0.11.2'
 }
 
 group = 'io.github.seerainer.dupes2trash'
@@ -20,7 +20,7 @@ sourceSets {
 }
 
 ext {
-    swtVersion = '3.130.0'
+    swtVersion = '3.131.0'
     swtArtifact = 'org.eclipse.swt.'
     os = System.getProperty("os.name").toLowerCase()
     arch = System.getProperty("os.arch")
@@ -67,7 +67,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -133,3 +133,4 @@ tasks.withType(Jar).configureEach {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
