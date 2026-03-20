@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'application'
-    id 'org.graalvm.buildtools.native' version '0.11.2'
+    id 'org.graalvm.buildtools.native' version '0.11.5'
 }
 
 group = 'io.github.seerainer.dupes2trash'
@@ -20,7 +20,7 @@ sourceSets {
 }
 
 ext {
-    swtVersion = '3.131.0'
+    swtVersion = '3.133.0'
     swtArtifact = 'org.eclipse.swt.'
     os = System.getProperty("os.name").toLowerCase()
     arch = System.getProperty("os.arch")
@@ -106,9 +106,9 @@ graalvmNative {
 tasks.withType(Jar).configureEach {
     exclude(
         'META-INF/ECLIPSE*',
-    	'META-INF/maven/**/**/*',
-    	'META-INF/versions/9/*',
-    	'META-INF/*.txt',
+        'META-INF/maven/**/**/*',
+        'META-INF/versions/9/*',
+        'META-INF/*.txt',
         'about_files/*',
         'version.txt',
         '.api_description',
@@ -133,4 +133,3 @@ tasks.withType(Jar).configureEach {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-

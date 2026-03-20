@@ -104,8 +104,6 @@ public class Dupes2Trash {
 				}
 			}
 		} finally {
-			DARK_BACK.dispose();
-			DARK_FORE.dispose();
 			DISPLAY.dispose();
 		}
 	}
